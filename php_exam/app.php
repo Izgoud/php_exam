@@ -5,7 +5,7 @@ include('functions.inc.php');
 
 if( $_SESSION['state'] != 'active' ) header('location:index.php');
 
-$req = "SELECT id, pseudo, email, password FROM phpexam_users ORDER BY id ASC";
+$req = "SELECT id, pseudo, email, state FROM phpexam_users ORDER BY id ASC";
 $prepare = $connect->prepare($req);
 // $prepare->bindParam(":pseudo", $pseudo);
 $prepare->execute();
@@ -31,7 +31,9 @@ $users = $prepare->fetchAll();
 	<div class="panel">
 		<h2>Utilisateurs enregistrés.</h2>
 		<ul class="clearfix">
-			<?php foreach ($users as $key => $value) { ?>
+			<?php foreach ($users as $key => $value) { 
+				if( $value['state'] != 'active' ) continue;
+				?>
 				<li class="clearfix users_user">
 					<img class="left users_avatar" src="avatars/<?php echo file_exists('avatars/'.$value['id'].'.jpg') ? $value['id'] : 'noAvatar'; ?>_mini.jpg" alt="avatar_<?php echo $value['pseudo'] ?>">
 					<div class="users_pseudo"><?php echo $value['pseudo'] ?></div>
